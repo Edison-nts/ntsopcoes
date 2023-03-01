@@ -3,12 +3,10 @@ import { AppBar, Button, Toolbar, Typography } from '@mui/material';
 import * as React from 'react';
 import { HOMEDIR, setUser, isAuthenticated, usuarioNull } from '../util/auth';
 import { Menu } from './menu';
-import { toolbarPainelCSS, toolbarProxyCSS, titleMenuCSS } from '../style';
+import { toolbarPainelCSS, titleMenuCSS } from '../style';
 
 export const Navbar = (props) => {
   const { atual } = props;
-  const [mode, setMode] = React.useState('painel');
-  const [changeMode, setChangeMode] = React.useState(false);
 
   const logout = () => {
     setUser(usuarioNull);
@@ -18,39 +16,17 @@ export const Navbar = (props) => {
     }, 500);
   };
 
-  const flipMode = () => {
-    let tempoMode = mode === 'proxy' ? 'painel' : 'proxy';
-    localStorage.setItem('Painel_Mode', tempoMode);
-    setMode(tempoMode);
-    setChangeMode(true);
-  };
-
   React.useEffect(() => {
-    let tempoMode = localStorage.getItem('Painel_Mode') || 'painel';
-
-    if (atual.id === 0 || (!atual.modePainel && !atual.modeProxy)) tempoMode = '';
-    else {
-      if (!atual.modePainel && tempoMode === 'painel') tempoMode = 'proxy';
-      if (!atual.modeProxy && tempoMode === 'proxy') tempoMode = 'painel';
-    }
-
-    if (tempoMode) localStorage.setItem('Painel_Mode', tempoMode);
-
-    setMode(tempoMode);
+    // console.log('Navbar - Atual', atual);
   }, [atual]);
 
   return (
     <div>
       <AppBar>
-        <Toolbar sx={mode === 'proxy' ? toolbarProxyCSS : toolbarPainelCSS}>
+        <Toolbar sx={toolbarPainelCSS}>
           {isAuthenticated() && (
             <Box>
-              <Menu mode={mode} atual={atual} checkUser={props.checkUser} changeMode={changeMode} />
-              {atual.id > 0 && atual.modePainel && atual.modeProxy && (
-                <Button color={'inherit'} onClick={() => flipMode()}>
-                  ALTERNAR MODO
-                </Button>
-              )}
+              <Menu atual={atual} checkUser={props.checkUser} />
             </Box>
           )}
           <Typography sx={titleMenuCSS}>

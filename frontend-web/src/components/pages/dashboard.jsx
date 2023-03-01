@@ -7,7 +7,6 @@ import { Box, Tabs, Tab } from '@mui/material';
 import authHttp from '../util/http/auth-http';
 import { HOMEDIR } from '../util/auth';
 import { formatISO, parseISO } from 'date-fns';
-import routes from '../routes';
 import { TsTextField } from '../formulario/ts-text-field';
 import TsButton from '../formulario/ts-button';
 import TsBackDrop from '../formulario/ts-back-drop';
@@ -44,39 +43,20 @@ const Dashboard = (props) => {
     localStorage.removeItem('projeto');
 
     try {
-      const response = await authHttp.login(usuario, senha);
+      const {data} = await authHttp.login(usuario, senha);
       const retUser = {
-        id: response.data.id,
-        usuarioPermit: response.data.usuarioPermit,
-        authorization: response.data.authorization,
-        login: response.data.login,
-        role: response.data.role,
-        token: response.data.token,
-        modePainel: false,
-        modeProxy: false,
+        id: data.id,
+        usuarioPermit: data.usuarioPermit,
+        authorization: data.authorization,
+        login: data.login,
+        role: data.role,
+        token: data.token
       };
 
       const agora = new Date();
       agora.setMinutes(agora.getMinutes() + 100);
       retUser.expires = formatISO(agora);
       retUser.senha = senha;
-
-      routes.forEach((r) => {
-        retUser.usuarioPermit.forEach((up) => {
-          if (up.modulo === r.modulo && up.permit > 0) {
-            if (r.mode === 'painel') {
-              retUser.modePainel = true;
-            } else if (r.mode === 'proxy') {
-              retUser.modeProxy = true;
-            }
-          }
-        });
-      });
-
-      if (retUser.modeProxy === false && retUser.modePainel === false) {
-        setPopMessage({mensagem:'Nenhum perfil associado ao usuário', tipo: 'error'});
-        return;
-      }
 
       setUser(retUser);
       setUsuario('');
@@ -85,9 +65,6 @@ const Dashboard = (props) => {
       setMsgLogin('Login com sucesso ...');
 
  
-
- 
-
       setTimeout(() => {
         setProcessando(false);
         window.location.href = `${HOMEDIR}/`;
@@ -115,7 +92,7 @@ const Dashboard = (props) => {
   };
 
   React.useEffect(() => {
-    // console.l og(' ... DashBoard sendo chamado');
+    // console.log(' ... DashBoard sendo chamado');
 
     const usuario = getUser();
     if (usuario.id !== atual.id) {

@@ -15,15 +15,15 @@ const routes = [
     menuTitle: 'Dashboard',
   },
   {
-    name: 'campanha.listar',
-    label: 'Listar campanhas',
-    path: `${HOMEDIR}/campanha`,
+    name: 'usuario.perfil',
+    label: 'Perfil do usuario',
+    path: `${HOMEDIR}/usuario`,
     element: <UsuarioPerfil />,
     exact: true,
-    modulo: 'campanha',
+    modulo: 'usuario',
     permit: 4,
     menuOrder: 4,
-    menuTitle: 'Campanhas',
+    menuTitle: 'Usuario',
   },
 ];
 

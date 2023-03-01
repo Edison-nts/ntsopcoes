@@ -2,7 +2,7 @@ import { httpTsApi } from '.';
 
 class AuthResource {
   constructor(http, resource) {
-    // this.http = httpTsApi;
+    this.http = httpTsApi;
     this.resource = resource;
   }
 
@@ -16,6 +16,6 @@ class AuthResource {
   }
 }
 
-const authHttp = new AuthResource(httpTsApi, 'login');
+const authHttp = new AuthResource(httpTsApi, 'entrar');
 
 export default authHttp;

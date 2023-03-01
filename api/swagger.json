@@ -1,0 +1,205 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Nts Opcoes API",
+    "version": "V.0.9.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000"
+    }
+  ],
+  "paths": {
+    "/api/entrar": {
+      "post": {
+        "tags": ["NTS-Opcoes"],
+        "summary": "Login",
+        "description": "# LOGIN \n Efetuar login usando usuario e senha. \n ## clique em Schema para visualizar request e response",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/pLogin"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/pLogin"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/pLogin"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/rLogin"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/rLogin"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/rLogin"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/usuario/{login_name}": {
+      "get": {
+        "tags": ["NTS-Opcoes"],
+        "summary": "Obter perfil do usuario",
+        "description": "# Obtem o perfil de um usuario. \n Envia login do usuario e recebe retorno \n ## clique em Schema para visualizar request e response",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "login_name",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "nullable": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/rIdentificacao"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/rIdentificacao"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/rIdentificacao"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [{ "ApiKeyAuth": [] }],
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "description": "Por favor insira sua api-key",
+        "name": "x-api-key"
+      }
+    },
+    "schemas": {
+      "rCodigoResposta": {
+        "type": "string",
+        "enum": ["00", "C0", "E0", "P0", "S0", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "V2", "V3", "T0"],
+        "description": "## ENUM \n - 00: OK \n - C0: Canal de venda invalido \n - E0: Parametro invalido \n - P0: Meio de pagamento invalido \n - S0: Indentificacao nao encontrada \n - S1: Socio inativo \n - S2: Transacao indefinida \n - S3: Documento inexistente \n - S4: Transacao ja efetuada \n - S5: CPF invalido \n - S6: Transacao ja cancelada \n - S7: Transacao ja aprovada \n - V2: Codigo estabelecimento indefinido \n - V3: CNPJ invalido \n - T0: tabelas desatualizadas"
+      },
+      "pLogin": {
+        "type": "object",
+        "properties": {
+          "login": {
+            "type": "string",
+            "nullable": true,
+            "title": "Usuario cadastrado"
+          },
+          "senha": {
+            "type": "string",
+            "nullable": true,
+            "title": "Senha do usuario"
+          }
+        },
+        "additionalProperties": false
+      },
+      "rLogin": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "nullable": true,
+            "title": "Token de autenticacao",
+            "description": "Retorna token a ser especificado no HEADER TOKEN das transacoes. Padrão JWT gerado pelo autenticador"
+          }
+        },
+        "additionalProperties": false
+      },
+      "rIdentificacao": {
+        "type": "object",
+        "properties": {
+          "nsuHost": {
+            "type": "integer",
+            "format": "int64",
+            "title": "Identificacao unica do response"
+          },
+          "codigoResposta": {
+            "$ref": "#/components/schemas/rCodigoResposta"
+          },
+          "mensagem": {
+            "type": "string",
+            "nullable": true,
+            "title": "Mensagem codigo resposta"
+          },
+          "usuario": {
+            "$ref": "#/components/schemas/rUsuarioData"
+          }
+        },
+        "additionalProperties": false
+      },
+      "rUsuarioData": {
+        "login": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        }
+      },
+      "rRetornoBase": {
+        "type": "object",
+        "properties": {
+          "nsuHost": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "codigoResposta": {
+            "$ref": "#/components/schemas/rCodigoResposta"
+          },
+          "mensagem": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

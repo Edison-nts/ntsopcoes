@@ -5,13 +5,10 @@ import { IconButton, Menu as MuiMenu, MenuItem } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import routes from '../routes';
 import { Link as RouterLink } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-import { HOMEDIR } from '../util/auth';
 
 export const Menu = (props) => {
-  const { atual, changeMode } = props;
+  const { atual } = props;
   const [menuRoutes, setMenuRoutes] = React.useState([]);
-  const navegate = useNavigate();
 
   const makeRoutes = () => {
     const tempRoutes = [];
@@ -27,9 +24,6 @@ export const Menu = (props) => {
       });
 
     setMenuRoutes(tempRoutes);
-    if (changeMode) {
-      navegate(`${HOMEDIR}/`);
-    }
   };
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -41,12 +35,11 @@ export const Menu = (props) => {
   };
 
   const handleOpen = (event) => setAnchorEl(event.currentTarget);
-  // const handleClose = () => setAnchorEl(null);
-  //console.l og("menuRoutes", menuRoutes);
 
   React.useEffect(() => {
+    console.log('atual em menu:', atual);
     makeRoutes();
-  }, [atual, changeMode]);
+  }, [atual]);
 
   if (menuRoutes.length === 0) {
     return <></>;
@@ -72,7 +65,6 @@ export const Menu = (props) => {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         transformOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
-        <MenuItem> ... {props.mode.toUpperCase()}</MenuItem>
         {menuRoutes.map((route, key) => {
           const path = route.path;
           const label = route.menuTitle;
