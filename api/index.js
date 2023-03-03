@@ -5,6 +5,7 @@ const cors = require('cors');
 const swaggerUI = require('swagger-ui-express');
 
 const opcoesRouter = require('./controller-opcoes');
+const opLabRouter = require('./controller-oplab');
 const swaggerDocument = require('./swagger.json');
 
 const app = express();
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 app.use('/api', opcoesRouter);
+app.use('/oplab', opLabRouter);
 
 // return default no route
 app.use((req, res, next) => {
